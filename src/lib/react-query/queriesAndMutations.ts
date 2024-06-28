@@ -10,16 +10,16 @@ import { INewUser } from '@/types';
 // For creating the user
 export const useCreateUserAccountMutation = () => {
   return useMutation({
-    // mutation function is what we're actually going to call
+    // mutation function that is going to be called inside the form. from appwrite
     mutationFn: (user: INewUser) => createUserAccount(user),
   });
 };
 
-// For signing in the user into their account
+// Will call after the user is created... For signing in the user into their account
 export const useSignInAccountMutation = () => {
   return useMutation({
-    // mutation function is what we're actually going to call
     mutationFn: (user: { email: string; password: string }) =>
+      // coming from Appwrite
       signInAccount(user),
   });
 };

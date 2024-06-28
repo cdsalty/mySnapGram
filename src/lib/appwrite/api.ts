@@ -1,4 +1,4 @@
-import { ID } from 'appwrite';
+import { ID, Query } from 'appwrite';
 
 import { INewUser } from '@/types';
 import { account, appwriteConfig, avatars, databases } from './config';
@@ -68,6 +68,31 @@ export async function signInAccount(user: { email: string; password: string }) {
       user.password
     );
     return session;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// 5. Get the currently logged in user:
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw Error('User not found');
+
+    // if the user if found, need to return it from appwrite database
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.equal('accountId', currentAccount.$id)]
+    );
+
+    // still need to check if no user.
+    if (!currentUser) throw Error;
+    console.log(
+      `The current user info coming from auth context: ${currentUser}`
+    );
+
+    return currentUser.documents[0];
   } catch (error) {
     console.log(error);
   }

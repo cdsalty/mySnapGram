@@ -25,6 +25,7 @@ const SignUpForm = () => {
   const { toast } = useToast();
   // const isLoading = false;
 
+  // mutateAsync is the function that's being called inside the form.
   const { mutateAsync: createUserAccount, isLoading: isCreatingUser } =
     useCreateUserAccountMutation();
 
@@ -53,17 +54,20 @@ const SignUpForm = () => {
         title: 'Sign up failed. Please try again.',
       });
     }
-    // coming from the form itself.
+    // Next goal: Create a session with the data from the form.
     const session = await signInAccount({
       email: values.email,
       password: values.password,
     });
 
+    console.log(`The session: ${session}`);
+
     if (!session) {
       return toast({
-        title: 'Sign in failed. Please try again.',
+        title: 'Sign in failed, Please try again',
       });
     }
+    // store the session in react context to know if the user is logged in or not.
   }
 
   return (
@@ -134,6 +138,7 @@ const SignUpForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
+            {/* calling "isLoaded" */}
             {isCreatingUser ? (
               <div className="flex-center gap-2">
                 <Loader />
